@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clock</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Space Mono', monospace;
+    overflow: hidden;
+  }
+
+  .clock-wrap {
+    position: relative;
+    background: linear-gradient(135deg, #1a0a2e 0%, #0d0618 50%, #1a0a2e 100%);
+    border: 1px solid rgba(180, 100, 255, 0.25);
+    border-radius: 14px;
+    padding: 22px 30px 20px;
+    width: 100%;
+    max-width: 164px;
+    box-shadow:
+      0 0 40px rgba(150, 60, 255, 0.12),
+      0 0 80px rgba(100, 20, 200, 0.08),
+      inset 0 1px 0 rgba(200, 150, 255, 0.1);
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(1.5px);
+    animation: float ease-in-out infinite;
+  }
+  .orb-1  { width: 7px;  height: 7px;  background: rgba(210, 100, 255, 0.55); top: 8%;  left: 8%;  animation-duration: 7s;  animation-delay: 0s; }
+  .orb-2  { width: 4px;  height: 4px;  background: rgba(150, 70, 255, 0.45);  top: 18%; left: 78%; animation-duration: 10s; animation-delay: -2s; }
+  .orb-3  { width: 5px;  height: 5px;  background: rgba(255, 140, 255, 0.35); top: 72%; left: 14%; animation-duration: 13s; animation-delay: -5s; }
+  .orb-4  { width: 3px;  height: 3px;  background: rgba(130, 60, 230, 0.5);   top: 85%; left: 82%; animation-duration: 9s;  animation-delay: -1s; }
+  .orb-5  { width: 6px;  height: 6px;  background: rgba(190, 110, 255, 0.4);  top: 45%; left: 90%; animation-duration: 11s; animation-delay: -4s; }
+  .orb-6  { width: 3px;  height: 3px;  background: rgba(220, 150, 255, 0.35); top: 60%; left: 5%;  animation-duration: 15s; animation-delay: -8s; }
+  .orb-7  { width: 8px;  height: 8px;  background: rgba(160, 80, 255, 0.2);   top: 35%; left: 50%; animation-duration: 18s; animation-delay: -6s; filter: blur(3px); }
+  .orb-8  { width: 4px;  height: 4px;  background: rgba(200, 120, 255, 0.45); top: 92%; left: 40%; animation-duration: 8s;  animation-delay: -3s; }
+  .orb-9  { width: 3px;  height: 3px;  background: rgba(180, 90, 255, 0.4);   top: 5%;  left: 55%; animation-duration: 12s; animation-delay: -9s; }
+  .orb-10 { width: 5px;  height: 5px;  background: rgba(140, 60, 220, 0.3);   top: 78%; left: 60%; animation-duration: 16s; animation-delay: -11s; filter: blur(2px); }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) scale(1); opacity: 0.55; }
+    50% { transform: translateY(-7px) scale(1.25); opacity: 1; }
+  }
+
+  .ring-accent {
+    position: absolute;
+    top: -2px;
+    right: 16px;
+    width: 44px;
+    height: 11px;
+    border: 1.5px solid rgba(180, 100, 255, 0.3);
+    border-radius: 50%;
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+  .ring-accent::after {
+    content: '';
+    position: absolute;
+    width: 6px; height: 6px;
+    background: rgba(180, 100, 255, 0.25);
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .time-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .digits {
+    font-family: 'Space Mono', monospace;
+    font-size: 42px;
+    font-weight: 700;
+    color: #e8d5ff;
+    line-height: 1;
+    letter-spacing: -1px;
+    text-align: center;
+    width: 100%;
+    text-shadow:
+      0 0 18px rgba(200, 130, 255, 0.65),
+      0 0 36px rgba(160, 80, 255, 0.3);
+  }
+
+  .mid-sep {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(180, 100, 255, 0.25), transparent);
+    margin: 9px 0;
+    width: 100%;
+  }
+
+  .ampm-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 7px;
+  }
+
+  .ampm {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(200, 130, 255, 0.7);
+    letter-spacing: 0.15em;
+  }
+
+  .pulse-dot {
+    width: 5px; height: 5px;
+    background: rgba(200, 120, 255, 0.85);
+    border-radius: 50%;
+    box-shadow: 0 0 7px rgba(200, 120, 255, 0.85);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50% { transform: scale(1.7); opacity: 0.3; }
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(180, 100, 255, 0.3), transparent);
+    margin: 13px 0 10px;
+  }
+
+  .date-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .day-text, .date-text {
+    font-family: 'Cinzel', serif;
+    font-size: 8.5px;
+    letter-spacing: 0.14em;
+    color: rgba(200, 150, 255, 0.55);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="clock-wrap">
+  <div class="ring-accent"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+  <div class="orb orb-5"></div>
+  <div class="orb orb-6"></div>
+  <div class="orb orb-7"></div>
+  <div class="orb orb-8"></div>
+  <div class="orb orb-9"></div>
+  <div class="orb orb-10"></div>
+
+  <div class="time-stack">
+    <div class="digits" id="hours">00</div>
+    <div class="mid-sep"></div>
+    <div class="digits" id="minutes">00</div>
+  </div>
+
+  <div class="ampm-row">
+    <div class="pulse-dot"></div>
+    <div class="ampm" id="ampm">AM</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="date-stack">
+    <div class="day-text" id="day">WEDNESDAY</div>
+    <div class="date-text" id="date">MAR 25 2026</div>
+  </div>
+</div>
+
+<script>
+  const days = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+  function update() {
+    const now = new Date();
+    let h = now.getHours();
+    const m = now.getMinutes();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+
+    document.getElementById('hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(m).padStart(2,'0');
+    document.getElementById('ampm').textContent = ampm;
+    document.getElementById('day').textContent = days[now.getDay()];
+    document.getElementById('date').textContent = `${months[now.getMonth()]} ${String(now.getDate()).padStart(2,'0')} ${now.getFullYear()}`;
+  }
+
+  update();
+  setInterval(update, 60000);
+</script>
+</body>
+</html>
